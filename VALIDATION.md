@@ -54,3 +54,37 @@ first-block decryption. Intel was compiled but not run. Older macOS releases
 were not available for runtime testing. Watches, tablets, USB autodetection,
 and device flashing were not tested. This is a development release, ad-hoc
 signed rather than Apple notarized.
+
+## Frija Flash 0.2.0 experimental companion
+
+On October 25, 2026, all **23 Swift tests and 41 Rust tests passed** (64 total).
+The Rust count includes 14 helper tests, 26 protocol tests, and one PIT-parser
+test. The helper's integration tests verify four original `.tar.md5` files,
+reject corrupted/mixed-model/duplicate-slot input, reject a changed device,
+and exercise a complete mock flash and normal reboot. The mock advertises a
+U model and accepts the corresponding U1 plan; it does not emulate the real
+SM-F776U bootloader's security or hardware behavior.
+
+The modified upstream PIT test proves the original mock partition map remains
+active despite a different embedded PIT. The Swift tests cover conversion
+policy, bootloader rollback rejection, device identity, helper checksums,
+process output drained before exit, and literal path handling. The original
+firmware-downloader tests still pass.
+
+Both UI apps and the Rust helper were built as universal arm64/x86_64 binaries.
+After extracting the suite ZIP, both app bundles passed strict ad-hoc signature
+verification, the helper's SHA256 matched the bundled manifest, and the archive
+passed `unzip -tqq`. The release helper reports `simulation: false` and
+`pitUpload: false`. The release build does not enable the mock feature.
+
+The native Frija Flash window was opened and visually inspected. Conversion
+mode accepts the requested SM-F776U1 target. Clicking Detect device with no
+Samsung Download Mode device connected produced the expected error, and
+Validate/Review controls remained disabled. The bundled helper's command-line
+no-device check returned the same controlled error. No firmware was written.
+
+**No real-device flash, SM-F776U connection, carrier conversion, or post-flash
+boot has been tested. No model is certified by these software tests.** Intel
+was compiled but not run. There is no defensible numerical success probability
+until hardware testing supplies evidence. The first practical hardware check
+is whether Detect device reads the owner's Download Mode model and bootloader.

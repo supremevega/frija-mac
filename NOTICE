@@ -18,3 +18,13 @@ The reference authentication key is credited upstream to @henr1kas and @ducthoe.
 Changes: implementation rewritten in Swift with Apple Foundation, CryptoKit,
 and CommonCrypto; native SwiftUI interface, bounded sequential range downloads,
 JSON resume identity records, separate streaming decryption, and ZIP CRC checks.
+
+Frija Flash additions, 0.2.0:
+The USB flashing helper vendors samloader-odin and samloader-pit 2.2.0 from
+revision 4dfea027767f3268e70dc130f169d459bd153cbf above. Flashing code also
+retains copyrights 2010–2017 Benjamin Dobell / Glass Echidna and 2021–2024
+Henrik Grimler; see Licenses/Heimdall-MIT.txt.
+Modified files: Backend/vendor/odin/src/flash.rs (disable automatic PIT writes,
+reject unmapped partitions, revise PIT test) and src/lib.rs (test-only exports).
+Other protocol implementation files retain the upstream source and notices.
+Rust dependency license texts are collected in Licenses/Rust-Dependencies.txt.

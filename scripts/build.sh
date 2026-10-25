@@ -11,7 +11,9 @@ for arch in arm64 x86_64; do
         --build-system native --disable-sandbox -c release --triple "$arch-apple-macosx14.0" \
         -Xswiftc -module-cache-path -Xswiftc "$module_dir"
 done
-app="$dist_dir/Frija Mac.app"
+stage="$(mktemp -d "${TMPDIR:-/tmp}/frija-mac.XXXXXX")"
+trap 'rm -rf "$stage"' EXIT
+app="$stage/Frija Mac.app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 arm_bin="$(swift build --package-path "$project_dir" --scratch-path "$build_dir/arm64" --build-system native --disable-sandbox -c release --triple arm64-apple-macosx14.0 --show-bin-path)"
 intel_bin="$(swift build --package-path "$project_dir" --scratch-path "$build_dir/x86_64" --build-system native --disable-sandbox -c release --triple x86_64-apple-macosx14.0 --show-bin-path)"
@@ -28,5 +30,5 @@ xattr -r -d com.apple.ResourceFork "$app" 2>/dev/null || true
 codesign --force --sign - "$app"
 codesign --force --sign - "$dist_dir/frija"
 codesign --verify --deep --strict "$app"
-ditto -c -k --norsrc --noextattr --keepParent "$app" "$dist_dir/Frija-Mac-0.1.0-universal.zip"
-printf 'Built %s\n' "$app"
+ditto -c -k --norsrc --noextattr --keepParent "$app" "$dist_dir/Frija-Mac-0.2.0-universal.zip"
+printf 'Built %s\n' "$dist_dir/Frija-Mac-0.2.0-universal.zip"

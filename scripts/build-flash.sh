@@ -1,0 +1,36 @@
+#!/bin/bash
+set -euo pipefail
+project_dir="$(cd "$(dirname "$0")/.." && pwd)"
+build_dir="${FRIJA_BUILD_DIR:-$project_dir/.build}"
+dist_dir="${FRIJA_DIST_DIR:-$project_dir/dist}"
+export MACOSX_DEPLOYMENT_TARGET=14.0
+export CARGO_TARGET_DIR="$build_dir/rust"
+export CLANG_MODULE_CACHE_PATH="$build_dir/module-cache"
+mkdir -p "$dist_dir" "$CLANG_MODULE_CACHE_PATH"
+for target in aarch64-apple-darwin x86_64-apple-darwin; do
+    cargo build --manifest-path "$project_dir/Backend/Cargo.toml" --locked --release --target "$target"
+done
+bash "$project_dir/scripts/build.sh"
+stage="$(mktemp -d "${TMPDIR:-/tmp}/frija-suite.XXXXXX")"
+trap 'rm -rf "$stage"' EXIT
+suite="$stage/Frija Mac 0.2.0"
+app="$suite/Frija Flash.app"
+mkdir -p "$app/Contents/MacOS" "$app/Contents/Helpers" "$app/Contents/Resources"
+arm_bin="$(swift build --package-path "$project_dir" --scratch-path "$build_dir/arm64" --build-system native --disable-sandbox -c release --triple arm64-apple-macosx14.0 --show-bin-path)"
+intel_bin="$(swift build --package-path "$project_dir" --scratch-path "$build_dir/x86_64" --build-system native --disable-sandbox -c release --triple x86_64-apple-macosx14.0 --show-bin-path)"
+lipo -create "$arm_bin/FrijaFlash" "$intel_bin/FrijaFlash" -output "$app/Contents/MacOS/FrijaFlash"
+lipo -create "$CARGO_TARGET_DIR/aarch64-apple-darwin/release/frija-flash-helper" "$CARGO_TARGET_DIR/x86_64-apple-darwin/release/frija-flash-helper" -output "$app/Contents/Helpers/frija-flash-helper"
+cp "$project_dir/scripts/FlashInfo.plist" "$app/Contents/Info.plist"
+cp "$build_dir/AppIcon.icns" "$app/Contents/Resources/AppIcon.icns"
+cp "$project_dir/NOTICE" "$project_dir/FLASHING.md" "$app/Contents/Resources/"
+cp -R "$project_dir/Licenses" "$app/Contents/Resources/"
+codesign --force --sign - "$app/Contents/Helpers/frija-flash-helper"
+helper_hash="$(shasum -a 256 "$app/Contents/Helpers/frija-flash-helper" | cut -d ' ' -f 1)"
+printf '{"sha256":"%s","version":"0.2.0"}\n' "$helper_hash" > "$app/Contents/Resources/HelperManifest.json"
+codesign --force --sign - "$app"
+codesign --verify --deep --strict "$app"
+ditto -x -k "$dist_dir/Frija-Mac-0.2.0-universal.zip" "$suite"
+cp "$project_dir/FLASHING.md" "$suite/READ-ME-FIRST.md"
+ditto -c -k --norsrc --noextattr --keepParent "$app" "$dist_dir/Frija-Flash-0.2.0-experimental.zip"
+ditto -c -k --norsrc --noextattr --keepParent "$suite" "$dist_dir/Frija-Mac-Suite-0.2.0-experimental.zip"
+printf 'Built %s\n' "$dist_dir/Frija-Mac-Suite-0.2.0-experimental.zip"
