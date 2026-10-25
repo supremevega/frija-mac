@@ -69,15 +69,28 @@ struct ContentView: View {
             Spacer(minLength: 40)
             VStack(alignment: .leading, spacing: 9) {
                 Label("Direct from Samsung", systemImage: "externaldrive.badge.checkmark").font(.caption)
-                Text("Independent macOS app\nVersion 0.1.0").font(.system(size: 10)).foregroundStyle(.tertiary).lineSpacing(3)
+                Text("Independent macOS app\nVersion 0.2.0").font(.system(size: 10)).foregroundStyle(.tertiary).lineSpacing(3)
             }
         }.padding(19).background(.thinMaterial)
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Samsung firmware").font(.system(size: 27, weight: .bold))
-            Text("Find your build. Download it. Ready to go.").font(.callout).foregroundStyle(.secondary)
+        HStack {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Samsung firmware").font(.system(size: 27, weight: .bold))
+                Text("Find your build. Download it. Ready to go.").font(.callout).foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button("Open Frija Flash") {
+                let sibling = Bundle.main.bundleURL.deletingLastPathComponent().appendingPathComponent("Frija Flash.app")
+                if FileManager.default.fileExists(atPath: sibling.path) { NSWorkspace.shared.open(sibling) }
+                else if let installed = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "local.frijaflash.app") { NSWorkspace.shared.open(installed) }
+                else {
+                    let alert = NSAlert(); alert.messageText = "Install Frija Flash alongside Frija Mac"
+                    alert.informativeText = "Both apps are included in the experimental Mac suite. Extract downloaded firmware before importing its folder into Frija Flash."
+                    alert.runModal()
+                }
+            }
         }
     }
 

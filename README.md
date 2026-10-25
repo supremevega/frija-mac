@@ -1,5 +1,11 @@
 # Frija Mac
 
+The 0.2.0 development branch adds **Frija Flash**, an experimental native
+flashing companion. See [FLASHING.md](FLASHING.md) for the U/U1 conversion
+workflow, build instructions, and hardware testing limits. No physical-device
+flash has been validated yet. The existing v0.1.0 public release is the
+firmware downloader only.
+
 An independent native macOS Samsung firmware downloader, inspired by Frija.
 Requires macOS 14 Sonoma or later. The packaged app supports Apple Silicon
 and Intel. No Python, Homebrew, Windows, or .NET runtime is needed to run it.

@@ -1,0 +1,38 @@
+[workspace]
+members = ["vendor/odin", "vendor/pit"]
+resolver = "2"
+
+[workspace.package]
+version = "2.2.0"
+edition = "2024"
+license = "Apache-2.0"
+repository = "https://github.com/topjohnwu/samloader-rs"
+
+[workspace.dependencies]
+samloader-pit = { path = "vendor/pit", version = "2.2.0" }
+memmap2 = "0.9"
+tar = "0.4"
+rusb = { version = "0.9", features = ["vendored"] }
+nusb = "0.2.7"
+binrw = "0.15"
+fast-md5 = "1.0.0"
+serialport = { version = "4.10", default-features = false }
+thiserror = "2"
+lz4_flex = "0.14.0"
+modular-bitfield = "0.13.1"
+
+[package]
+name = "frija-flash-helper"
+version = "0.2.0"
+edition = "2024"
+license = "Apache-2.0"
+
+[dependencies]
+samloader-odin = { path = "vendor/odin", default-features = false, features = ["nusb"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tar = { workspace = true }
+fast-md5 = { workspace = true }
+
+[features]
+mock = ["samloader-odin/mock"]

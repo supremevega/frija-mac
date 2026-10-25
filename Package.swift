@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.macOS(.v14)],
     products: [
         .executable(name: "FrijaMac", targets: ["FrijaMac"]),
+        .executable(name: "FrijaFlash", targets: ["FrijaFlash"]),
         .executable(name: "frija", targets: ["FrijaCLI"])
     ],
     targets: [
@@ -13,6 +14,8 @@ let package = Package(
         .executableTarget(name: "FrijaMac", dependencies: ["FrijaCore"],
                           swiftSettings: [.defaultIsolation(MainActor.self)]),
         .executableTarget(name: "FrijaCLI", dependencies: ["FrijaCore"]),
+        .executableTarget(name: "FrijaFlash", dependencies: ["FrijaCore"],
+                          swiftSettings: [.defaultIsolation(MainActor.self)]),
         .testTarget(name: "FrijaCoreTests", dependencies: ["FrijaCore"])
     ]
 )

@@ -20,7 +20,7 @@ private typealias ModelState = SwiftUI.State<AppModel>
                 Button("About Frija Mac") {
                     NSApplication.shared.orderFrontStandardAboutPanel(options: [
                         .applicationName: "Frija Mac",
-                        .applicationVersion: "0.1.0",
+                        .applicationVersion: "0.2.0",
                         .version: "1",
                         .credits: NSAttributedString(string: "Independent native Samsung firmware downloader.\nInspired by Frija; not affiliated with Frija or Samsung.\nProtocol references: GNSF by Vladislav Tislenko (MIT),\nsamloader-rs by John Wu (Apache 2.0).\nLicenses and source are included with this build.")
                     ])

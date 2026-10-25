@@ -1,0 +1,16 @@
+[package]
+name = "samloader-pit"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+description = "Samsung device Partition Information Table (PIT) parser"
+keywords = ["samsung", "firmware"]
+
+[dependencies]
+binrw = { workspace = true }
+modular-bitfield = { workspace = true }
+
+[lib]
+path = "src/lib.rs"
