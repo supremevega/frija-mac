@@ -1,0 +1,20 @@
+Frija Mac is an independent native macOS implementation inspired by Frija.
+It is not affiliated with SlackingVeteran, Frija, or Samsung.
+No code or resources were extracted from the supplied Windows executable.
+
+The Swift FUS protocol implementation is adapted from:
+
+GNSF, Copyright (c) 2025–2026 Vladislav Tislenko (keklick1337)
+https://github.com/keklick1337/gnsf
+Reference revision: e1f9cee370d20fd0ad576bdd1100ba51dee692d4
+MIT license, reproduced in Licenses/GNSF-MIT.txt.
+
+samloader-rs, Copyright 2026 John "topjohnwu" Wu
+https://github.com/topjohnwu/samloader-rs
+Reference revision: 4dfea027767f3268e70dc130f169d459bd153cbf
+Apache License 2.0, reproduced in Licenses/Samloader-Apache-2.0.txt.
+The reference authentication key is credited upstream to @henr1kas and @ducthoe.
+
+Changes: implementation rewritten in Swift with Apple Foundation, CryptoKit,
+and CommonCrypto; native SwiftUI interface, bounded sequential range downloads,
+JSON resume identity records, separate streaming decryption, and ZIP CRC checks.
